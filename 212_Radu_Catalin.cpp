@@ -2,8 +2,8 @@
 
 using namespace std;
 
-char* errorMsg[20] = {
-    "Vectori alesi au dimensiuni diferite"
+char* errorMsg[30] = {
+    "ERROR 0: Vectori alesi au dimensiuni diferite"
 };
 
 class Vector {
@@ -13,8 +13,7 @@ class Vector {
     public:
         Vector(double, int);
         Vector(Vector&);
-        // ~Vector(Vector&);
-        void change(double, int);
+        void change(double, int); // schimba vectorul si numarul de componente
         void read(istream&);
         void print(ostream &out);
         friend istream& operator>>(istream&, Vector&);
@@ -50,7 +49,7 @@ void Vector::change(double x, int n) {
 }
 
 void Vector::read(istream &in) {
-    cout << "Number of components: ";
+    cout << "Numarul de componente: ";
     in >> this->context;
     cout << "Vector: ";
     double *v = new double[this->context];
@@ -58,12 +57,9 @@ void Vector::read(istream &in) {
         in >> v[i];
     }
     this->v = v;
-    cout << "reading is finished\n";
 }
 
 void Vector::print(ostream &out) {
-    out << "Number of components: " << this->context << "\n";
-    out << "Vector ";
     for(int i = 0; i < this->context; i++) {
         out << this->v[i] << " ";
     }
@@ -98,12 +94,12 @@ Vector& operator+(Vector& v1, Vector& v2) {
         vect->context = v1.context;
         for(int i = 0; i < v1.context; i++) {
             vect->v[i] = v1.v[i] + v2.v[i];
-            cout << vect->v[i];
         }
 
         return *vect;
 
     } catch(int code) {
+        system("cls");
         cout << errorMsg[code];
     }
 }
@@ -123,6 +119,7 @@ Vector& operator-(Vector& v1, Vector& v2) {
         return *vect;
 
     } catch(int code) {
+        system("cls");
         cout << errorMsg[code];
     }
 }
@@ -168,9 +165,121 @@ int length(Vector& vect) {
     return vect.context;
 }
 
+// Menu class
+class Menu {
+    private:
+        Vector v1;
+        Vector v2;
+    public:
+        Menu() {
+            this->menu();
+        }
+    private:
+        void menu();
+        void option0();
+        void option1();
+        void option2();
+        void option3();
+        void option4();
+        void readVectors();
+        void backToMenu();
+};
+
+void Menu::menu() {
+    cout << "Alege o optiune:\n\n";
+    cout << "0. Aduna doi vectori\n";
+    cout << "1. Scade doi vectori\n";
+    cout << "2. Verifica daca doi vectori sunt egali\n";
+    cout << "3. Verifica daca doi vectori sunt diferiti\n";
+    cout << "4. Verifica lungimea unui vector\n";
+    cout << "5. Iesi din meniu\n";
+
+    int opt;
+    cin >> opt;
+
+    switch(opt) {
+        case 0:
+            this->option0();
+        break;
+        case 1:
+            this->option1();
+        break;
+        case 2:
+            this->option2();
+        break;
+        case 3:
+            this->option3();
+        break;
+        case 4:
+            this->option4();
+        break;
+    }
+}
+
+void Menu::option0() {
+    this->readVectors();
+    cout << "v1 + v2 = ";
+    cout << v1 + v2;
+    this->backToMenu();
+}
+
+void Menu::option1() {
+    this->readVectors();
+    cout << "v1 - v2 = ";
+    cout << v1 - v2;
+    this->backToMenu();
+}
+
+void Menu::option2() {
+    this->readVectors();
+    if(v1 == v2) {
+        cout << "Vectorii sunt egali\n";
+    } else {
+        cout << "Vectorii NU sunt egali\n";
+    }
+    this->backToMenu();
+}
+
+void Menu::option3() {
+    this->readVectors();
+    if(v1 != v2) {
+        cout << "Vectorii sunt diferiti\n";
+    } else {
+        cout << "Vectorii NU sunt diferiti\n";
+    }
+    this->backToMenu();
+}
+
+void Menu::option4() {
+    system("cls");
+    cout << "v:\n";
+    cin >> v1;
+    cout << "\n";
+    cout << "Lungimea vectorului este: " << length(v1);
+
+}
+
+void Menu::readVectors() {
+    system("cls");
+    cout << "v1:\n";
+    cin >> v1;
+    cout << "\nv2:\n";
+    cin >> v2;
+    cout << "\n";
+}
+
+void Menu::backToMenu() {
+    char opt;
+    cout << "Apasa orice tasta urmata de enter pentru a te intoarce in meniu\n";
+    cin >> opt;
+    system("cls");
+    this->menu();
+}
+
+
+
 int main()
 {
-    Vector v1(1, 3), v2(1,3);
-    v1.change(3.5, 4);
+    new Menu(); // Deschid meniul
     return 0;
 }
