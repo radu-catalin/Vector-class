@@ -3,17 +3,17 @@
 using namespace std;
 
 char* errorMsg[30] = {
-    "ERROR 0: Vectori alesi au dimensiuni diferite"
+    "ERROR 0: Vectorii alesi au dimensiuni diferite"
 };
 
 class Vector {
-    public:
+    private:
         double *v; // vector
         int context; // numarul de componente
     public:
         Vector(double, int);
         Vector(Vector&);
-        void change(double, int); // schimba vectorul si numarul de componente
+        void change(double, int);
         void read(istream&);
         void print(ostream &out);
         friend istream& operator>>(istream&, Vector&);
@@ -24,7 +24,9 @@ class Vector {
         friend Vector& operator+=(Vector&, Vector&);
         friend Vector& operator-=(Vector&, Vector&);
         friend bool operator==(Vector&, Vector&);
+        friend bool operator!=(Vector&, Vector&);
         friend int length(Vector&);
+        friend void readObjects(int&);
 };
 
 Vector::Vector(double x = 0, int n = 0) {
@@ -165,7 +167,23 @@ int length(Vector& vect) {
     return vect.context;
 }
 
-// Menu class
+void readObjects(int n) {
+    Vector* object = new Vector[n];
+
+    for(int i = 0; i < n; i++) {
+        cout << "v" << i + 1 << ":\n";
+        cin >> object[i];
+        cout << "\n";
+    }
+    system("cls");
+    cout << "Vectorii cititi sunt:\n";
+    for(int i = 0; i < n; i++) {
+        cout << "v" << i + 1 <<": ";
+        cout << object[i];
+    }
+}
+
+// Menu Class
 class Menu {
     private:
         Vector v1;
@@ -181,6 +199,7 @@ class Menu {
         void option2();
         void option3();
         void option4();
+        void option5();
         void readVectors();
         void backToMenu();
 };
@@ -192,7 +211,8 @@ void Menu::menu() {
     cout << "2. Verifica daca doi vectori sunt egali\n";
     cout << "3. Verifica daca doi vectori sunt diferiti\n";
     cout << "4. Verifica lungimea unui vector\n";
-    cout << "5. Iesi din meniu\n";
+    cout << "5. Citeste si afiseaza n obiecte\n";
+    cout << "6. Iesi din meniu\n";
 
     int opt;
     cin >> opt;
@@ -212,6 +232,9 @@ void Menu::menu() {
         break;
         case 4:
             this->option4();
+        break;
+        case 5:
+            this->option5();
         break;
     }
 }
@@ -256,9 +279,19 @@ void Menu::option4() {
     cin >> v1;
     cout << "\n";
     cout << "Lungimea vectorului este: " << length(v1);
+    this->backToMenu();
 
 }
 
+void Menu::option5() {
+    system("cls");
+    int n;
+    cout << "Numarul de obiecte: ";
+    cin >> n;
+    cout << "\n";
+    readObjects(n);
+    this->backToMenu();
+}
 void Menu::readVectors() {
     system("cls");
     cout << "v1:\n";
